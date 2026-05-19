@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Simulador Parqueadero UDES</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="sim">
+        <div id="viewport"></div>
+        <div class="hud">
+          <div>
+            <span>Reloj</span>
+            <strong id="clock">00:00</strong>
+          </div>
+          <div>
+            <span>Ocupación</span>
+            <strong id="occupancy">0 / 250</strong>
+          </div>
+          <div>
+            <span>Motos ceptadas</span>
+            <strong id="accepted">0</strong>
+          </div>
+          <div>
+            <span>Motos rechazadas</span>
+            <strong id="rejected">0</strong>
+          </div>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <h1>Parqueadero UDES</h1>
+        <form id="configForm" class="grid">
+          <label>Capacidad K<input name="capacity" type="number" value="250" min="1" /></label>
+          <div class="input-unit-container">
+            <div class="label-row">
+              <span id="labelArrival" class="switchable-label">λ motos/hora</span>
+              <button type="button" class="switch-unit-btn" id="switchArrivalBtn" title="Cambiar a Tiempo Promedio">⇄</button>
+            </div>
+            <input name="arrival_rate" id="arrivalInput" type="number" value="108.4" step="0.1" />
+          </div>
+          <div class="input-unit-container">
+            <div class="label-row">
+              <span id="labelService" class="switchable-label">μ salidas/hora</span>
+              <button type="button" class="switch-unit-btn" id="switchServiceBtn" title="Cambiar a Tiempo Promedio">⇄</button>
+            </div>
+            <input name="service_rate" id="serviceInput" type="number" value="0.2923" step="0.0001" />
+          </div>
+          <!--<label>λ motos/hora<input name="arrival_rate" type="number" value="108.4" step="0.1" /></label>-->
+          <!--<label>μ salidas/hora<input name="service_rate" type="number" value="0.2923" step="0.0001" /></label>-->
+          <label>Duración horas<input name="duration_hours" type="number" value="14" step="0.5" /></label>
+          <label>Hora inicial<input name="start_hour" type="number" value="6" step="0.25" min="0" max="23.75" /></label>
+          <div class="seed-container">
+            <label>Semilla</label>
+            <div class="seed-row">
+              <input id="seedInput" name="seed" type="number" value="2190132005" />
+              <button type="button" id="randomSeedBtn" title="Generar nueva semilla">↻</button>
+            </div>
+          </div>
+          <div class="grid full-width-grid">
+            <label>
+              Motos visibles en 3D
+              <input id="visibleLimitInput" name="visible_limit" type="number" value="1000" min="20" />
+            </label>
+            <label class="checkbox-label">
+              <input id="unlimitedBikesCheck" type="checkbox" />
+              Sin límite (Rendimiento libre)
+            </label>
+          </div>
+        </form>
+        <div class="actions">
+          <button id="runBtn">Simular</button>
+          <button id="pauseBtn">Pausar</button>
+          <button id="reportBtn">Informe</button>
+        </div>
+        <div class="speed" id="speedButtons"></div>
+        <div class="metrics" id="metrics"></div>
+      </aside>
+
+      <section class="bottom">
+        <div>
+          <h2>Gráficas</h2>
+          <canvas id="occupancyChart"></canvas>
+        </div>
+        <div>
+          <h2>Análisis</h2>
+          <p id="analysisSummary"></p>
+          <ul id="analysisList"></ul>
+          <div id="reportLinks" class="report-links"></div>
+        </div>
+      </section>
+      <section class="log-panel">
+        <h2>Tabla de simulación <span id="tableSeedLabel" class="seed-badge"></span></h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID moto</th>
+                <th>N° Tarjeta Control</th>
+                <th>Entrada</th>
+                <th>Salida</th>
+                <th>Estado de Asignación</th>
+              </tr>
+            </thead>
+            <tbody id="logBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <script src="/static/app.js?v=10"></script>
+  </body>
+</html>

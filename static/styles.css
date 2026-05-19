@@ -1,0 +1,420 @@
+:root {
+  color-scheme: dark;
+  font-family: Inter, Segoe UI, system-ui, sans-serif;
+  background: #0c0c0e;
+  color: #e4e4e7;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+}
+
+button, input {
+  font: inherit;
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  grid-template-rows: minmax(560px, 68vh) auto;
+  gap: 16px;
+  padding: 16px;
+}
+
+.sim, .panel, .bottom, .log-panel {
+  background: #16161a;
+  border: 1px solid #27272a;
+  border-radius: 8px;
+}
+
+.sim {
+  position: relative;
+  overflow: hidden;
+}
+
+#viewport {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 94px;
+  bottom: 0;
+  width: 100%;
+  height: auto;
+}
+
+.hud {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.hud div, .metrics article {
+  background: rgba(15, 15, 18, 0.92);
+  border: 1px solid #3f3f46;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.hud span, label, .metrics span {
+  display: block;
+  color: #a1a1aa;
+  font-size: 12px;
+}
+
+.hud strong {
+  display: block;
+  margin-top: 3px;
+  font-size: 20px;
+}
+
+.panel {
+  padding: 18px;
+  overflow: auto;
+}
+
+h1, h2 {
+  margin: 0 0 14px;
+  letter-spacing: 0;
+}
+
+h1 {
+  font-size: 24px;
+}
+
+h2 {
+  font-size: 18px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+input {
+  width: 100%;
+  margin-top: 6px;
+  padding: 9px 10px;
+  color: #eef2f6;
+  background: #0f0f12;
+  border: 1px solid #3f3f46;
+  border-radius: 6px;
+}
+
+.actions {
+  display: grid;
+  /* Esto crea 3 columnas exactamente iguales, una para cada botón */
+  grid-template-columns: repeat(3, minmax(0, 1fr)); 
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.speed {
+  display: grid;
+  /* Esto crea una cuadrícula de 5 columnas. Como tienes 10 botones, 
+     se van a acomodar automáticamente en 2 filas perfectas de 5 */
+  grid-template-columns: repeat(5, minmax(0, 1fr)); 
+  gap: 6px;
+  margin-top: 14px;
+}
+
+button {
+  min-height: 38px;
+  padding: 0 13px;
+  color: #0d0d0f;
+  background: #00cbd6;
+  border: 1px solid #00e5f0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button.secondary, .speed button {
+  color: #a1a1aa;
+  background: #0f0f12;
+  border-color: #3f3f46;
+}
+
+button.active {
+  background: #00cbd6;
+  border-color: #00e5f0;
+  color: #0d0d0f;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.metrics strong {
+  display: block;
+  margin-top: 4px;
+  font-size: 18px;
+}
+
+.bottom {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 0.8fr);
+  gap: 18px;
+  padding: 18px;
+}
+
+.log-panel {
+  grid-column: 1 / -1;
+  padding: 18px;
+}
+
+.table-wrap {
+  max-height: 320px;
+  overflow: auto;
+  border: 1px solid #2d2d34;
+  border-radius: 8px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 760px;
+}
+
+th, td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #2d2d34;
+  text-align: left;
+  font-size: 13px;
+}
+
+th {
+  position: sticky;
+  top: 0;
+  background: #27272a;
+  color: #00cbd6;
+  z-index: 1;
+  border: 1px solid #3f3f46;
+}
+
+td {
+  color: #e4e4e7;
+  background: #1e1e24;
+  border: 1px solid #2d2d34;
+  font-family: Consolas, monospace;
+}
+
+tbody tr:nth-child(even) td {
+  background: #17171a;
+}
+
+#occupancyChart {
+  width: 100%;
+  max-height: 300px;
+}
+
+/*canvas {
+  width: 100%;
+  max-height: 300px;
+}*/
+
+#analysisSummary {
+  color: #d6dee8;
+  line-height: 1.5;
+}
+
+#analysisList {
+  margin: 0;
+  padding-left: 20px;
+  color: #bfccd8;
+  line-height: 1.45;
+}
+
+.report-links {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.report-links a {
+  color: #0d0d0f;
+  background: #00cbd6;
+  border-radius: 6px;
+  padding: 9px 11px;
+  text-decoration: none;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 8px;
+  border-radius: 50%;
+  box-shadow: 0 0 8px currentColor;
+}
+
+.status-dot.assigned {
+  color: #00ff88;
+  background: #00ff88;
+}
+
+.status-dot.released {
+  color: #a1a1aa;
+  background: #a1a1aa;
+}
+
+.status-dot.rejected {
+  color: #ef4444;
+  background: #ef4444;
+}
+
+@media (max-width: 980px) {
+  .shell {
+    grid-template-columns: 1fr;
+    grid-template-rows: 58vh auto auto;
+  }
+
+  .bottom {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .shell {
+    padding: 10px;
+  }
+
+  .grid, .hud, .metrics {
+    grid-template-columns: 1fr;
+  }
+}
+
+.seed-container {
+  grid-column: span 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.seed-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 0px;
+}
+
+.seed-row input {
+  margin-top: 0;
+}
+
+#randomSeedBtn {
+  margin-top: 4px;
+  min-height: 38px;
+  padding: 0 12px;
+  font-size: 16px;
+  background: #0f0f12;
+  color: #00cbd6;
+  border: 1px solid #3f3f46;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+#randomSeedBtn:hover {
+  background: #17171c;
+  border-color: #00cbd6;
+  color: #00e5f0;
+}
+
+.log-panel h2 {
+  display: inline-flex;
+  align-items: center;
+}
+
+.seed-badge {
+  font-size: 15px;
+  font-weight: 500;
+  color: #a1a1aa; /* #00cbd6 o #a1a1aa */
+  margin-left: 8px;
+  font-family: Consolas, Monaco, monospace;
+}
+
+.full-width-grid {
+  grid-template-columns: 1fr 1fr;
+  grid-column: span 2;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+  cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+}
+
+.input-unit-container {
+  display: flex;
+  flex-direction: column;
+  margin-top: -3.5px;
+}
+
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.switchable-label {
+  color: #a1a1aa;
+  font-size: 12px;
+}
+
+.switch-unit-btn {
+  background: transparent;
+  border: none;
+  color: #00cbd6;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 0 4px;
+  min-height: auto;
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.switch-unit-btn:hover {
+  transform: scale(1.15);
+  color: #00e5f0;
+}
+
+/* ===== UNIFICAR TAMAÑO DE TODOS LOS INPUTS DEL FORMULARIO ===== */
+#configForm input[type="number"],
+#configForm input[type="text"] {
+  font-size: 12px !important;      /* Mismo tamaño que los inputs dentro de label */
+  line-height: normal !important;
+  margin-top: 6px !important;      /* Mismo margen superior */
+  margin-bottom: 0 !important;
+  padding: 9px 10px !important;
+  box-sizing: border-box !important;
+}
+
+/* Ajuste para el input de semilla (que tiene margin-top:0 por una regla anterior) */
+.seed-row input {
+  margin-top: 6px !important;      /* Forzar mismo margen */
+}
+
+/* Mantener el botón de semilla alineado verticalmente */
+.seed-row {
+  align-items: flex-start !important; /* Para que el botón no se estire */
+}
