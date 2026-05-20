@@ -14,7 +14,7 @@ from .simulation import SimulationConfig, run_simulation
 
 
 class ConfigIn(BaseModel):
-    capacity: int = Field(250, ge=1, le=2000)
+    capacity: int = Field(250, ge=1) # ,le=2000
     arrival_rate: float = Field(108.4, gt=0)
     service_rate: float = Field(0.2923, gt=0)
     duration_hours: float = Field(14.0, gt=0, le=24)
