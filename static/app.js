@@ -489,7 +489,10 @@ function tick(now) {
   if (!paused && result) {
     simTime = Math.min(simTime + delta * speed, result.config.duration_hours);
     processEvents();
-    animateBikes(delta);
+    
+    // Mantenemos el delta real aquí para que a 1x no vaya lento
+    animateBikes(delta); 
+    
     updateHud();
   }
   camera.lookAt(camera.position.x, camera.position.y - 38, camera.position.z + 42);
@@ -535,7 +538,13 @@ function exitBike(event) {
 }
 
 function animateBikes(delta) {
-  const motion = Math.min(11.5, 4.8 + speed * 150);
+  // Descubrimos el multiplicador de velocidad actual (ej: en 1x es 1, en 20x es 20)
+  const timeMultiplier = speed / (1 / 60);
+  
+  // Escalamos la velocidad base (4.8) por el multiplicador. 
+  // A 1x la velocidad es 4.8. A 20x la velocidad física sube automáticamente a 96.
+  const motion = 15.0 * timeMultiplier; 
+
   bikes.forEach((bike, id) => {
     if (bike.state === "parked") return;
     
