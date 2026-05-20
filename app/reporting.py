@@ -105,6 +105,11 @@ def write_html(path: Path, payload: dict[str, Any], docx_name: str, xlsx_name: s
     s = payload["simulated"]
     ae = payload["analytics_engine"]
     
+    if ae['slots_needed_delta'] > 0:
+        optimization_msg = f"la infraestructura requiere agregar un estimado de <strong>{ae['slots_needed_delta']} puestos físicos</strong>, pasando de la capacidad actual de K={c['capacity']} a una capacidad recomendada de <strong>K_óptimo={ae['suggested_k']}</strong>."
+    else:
+        optimization_msg = f"la infraestructura actual cuenta con la capacidad óptima necesaria (K={c['capacity']} puestos) para mantener el margen de seguridad operativa bajo los objetivos establecidos."
+
     findings_html = "".join(f"<li><span class=\"bullet-topic\">Diagnóstico:</span> {item}</li>" for item in payload["analysis"]["findings"])
     recs_html = "".join(f"<li><span class=\"bullet-topic\">Acción Recomendada:</span> {item}</li>" for item in payload["analysis"]["recommendations"])
     
@@ -211,7 +216,7 @@ def write_html(path: Path, payload: dict[str, Any], docx_name: str, xlsx_name: s
       </div>
       <div class="card-metric">
         <div class="label">No Atendidos al Mes (Est.)</div>
-        <div class="val">-{ae['lost_users_monthly']} usuarios</div>
+        <div class="val">{ae['lost_users_monthly']} usuarios</div>
       </div>
     </div>
 
@@ -219,7 +224,7 @@ def write_html(path: Path, payload: dict[str, Any], docx_name: str, xlsx_name: s
       <h2>Resumen Ejecutivo del Sistema</h2>
       <div class="ai-insights">
         <p><strong>Conclusión General:</strong> El sistema de estacionamiento de motocicletas opera bajo un estado de <strong>{ae['regime']}</strong>. Al evaluar las fórmulas matemáticas frente a los eventos simulados, se observa un comportamiento con <strong>{ae['convergence_status']}</strong> (Diferencia: <code>{ae['delta_rejection']:.5f}</code>).</p>
-        <p>Para estabilizar el servicio y reducir la tasa de motos rechazadas al 5.00% objetivo, la infraestructura requiere agregar un estimado de <strong>+{ae['slots_needed_delta']} puestos físicos</strong>, pasando de la capacidad actual de K={c['capacity']} a una capacidad recomendada de <strong>K_óptimo={ae['suggested_k']}</strong>.</p>
+        <p>Para estabilizar el servicio y reducir la tasa de motos rechazadas al 5.00% objetivo, {optimization_msg}</p>
       </div>
       <p>{payload['analysis']['summary']}</p>
     </section>
@@ -323,13 +328,17 @@ def write_docx(path: Path, payload: dict[str, Any]) -> None:
     doc.add_heading("1. Resumen Ejecutivo del Sistema", level=1)
     p_dictamen = doc.add_paragraph()
     p_dictamen.paragraph_format.left_indent = Inches(0.25)
+
+    if ae['slots_needed_delta'] > 0:
+        recommendation_text = f"Se recomienda incrementar en {ae['slots_needed_delta']} los puestos de estacionamiento para reducir la tasa de rechazo al límite ideal del 5.00%."
+    else:
+        recommendation_text = "No se requieren puestos adicionales; la infraestructura actual es suficiente para absorber la demanda dentro de los márgenes de tolerancia."
     
     run_dictamen = p_dictamen.add_run(
         f"DIAGNÓSTICO AUTOMÁTICO: Evaluando el comportamiento de los datos, el parqueadero se encuentra actualmente en un estado de "
         f"'{ae['regime']}'. Los resultados simulados presentan una '{ae['convergence_status']}' comparados con el modelo matemático. "
         f"Se proyecta que este nivel de congestión cause la pérdida de atención de {ae['lost_users_monthly']} usuarios al mes. "
-        f"Se recomienda incrementar en {ae['slots_needed_delta']} los puestos de estacionamiento para reducir la "
-        f"tasa de rechazo al límite ideal del 5.00%."
+        f"{recommendation_text}"
     )
     run_dictamen.font.italic = True
 
@@ -459,7 +468,7 @@ def write_xlsx(path: Path, payload: dict[str, Any]) -> None:
     ws[f"A{start_box+1}"] = "Estado del Tráfico Detectado:"
     ws[f"B{start_box+1}"] = ae["regime"]
     ws[f"A{start_box+2}"] = "Ampliación Recomendada:"
-    ws[f"B{start_box+2}"] = f"+{ae['slots_needed_delta']} puestos adicionales sugeridos"
+    ws[f"B{start_box+2}"] = f"{ae['slots_needed_delta']} puestos adicionales sugeridos"
     ws[f"A{start_box+3}"] = "Capacidad Óptima Calculada:"
     ws[f"B{start_box+3}"] = f"K_óptimo = {ae['suggested_k']} puestos"
     
