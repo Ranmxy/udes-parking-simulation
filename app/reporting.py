@@ -22,7 +22,7 @@ REPORT_DIR = Path("reports")
 
 def build_reports(payload: dict[str, Any]) -> dict[str, str]:
     """
-    Orquesta la generación de reportes analíticos basados en la simulación.
+    Generación de reportes analíticos basados en la simulación.
     Realiza un post-procesamiento de datos para la toma de decisiones.
     """
     REPORT_DIR.mkdir(exist_ok=True)
